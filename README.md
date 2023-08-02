@@ -6,8 +6,8 @@
 ![example - basic auth](https://github.com/amondnet/vercel-action/workflows/example%20-%20basic%20auth/badge.svg)
 ![example - angular](https://github.com/amondnet/vercel-action/workflows/example%20-%20angular/badge.svg)
 
-![stars](https://badgen.net/github/stars/amondnet/vercel-action) 
-![forks](https://badgen.net/github/forks/amondnet/vercel-action) 
+![stars](https://badgen.net/github/stars/amondnet/vercel-action)
+![forks](https://badgen.net/github/forks/amondnet/vercel-action)
 ![HitCount](http://hits.dwyl.com/amondnet/vercel-action.svg)
 
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=amondnet_vercel-action&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=amondnet_vercel-action)
@@ -18,12 +18,12 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=amondnet_vercel-action&metric=security_rating)](https://sonarcloud.io/dashboard?id=amondnet_vercel-action)
 
 This action was formerly [Zeit Now Deployment](https://github.com/marketplace/actions/zeit-now-deployment). [Migration Guide](#migration-from-v2)
-![stars](https://badgen.net/github/stars/amondnet/now-deployment) ![forks](https://badgen.net/github/forks/amondnet/now-deployment) 
+![stars](https://badgen.net/github/stars/amondnet/now-deployment) ![forks](https://badgen.net/github/forks/amondnet/now-deployment)
 
 ## Introduction to Vercel
 ​Vercel is a cloud platform for **static sites** and **Serverless Functions** that fits perfectly with your workflow. It enables developers to host **Jamstack** websites and web services that **deploy instantly**, **scale automatically**, and requires **no supervision**, all with **no configuration**.
 
-This action make a Vercel deployment with github actions. 
+This action make a Vercel deployment with github actions.
 
 - [x] Deploy to Vercel.
 - [x] Comment on pull request.
@@ -50,8 +50,8 @@ This action make a Vercel deployment with github actions.
 | vercel-org-id       | <ul><li>- [x] </li></ol> |         | ❗Vercel CLI 17+,The `name` property in vercel.json is deprecated (https://zeit.ink/5F)                  |
 | vercel-args         | <ul><li>- [ ] </li></ol> |         | This is optional args for `vercel` cli. Example: `--prod`                                            |
 | working-directory   | <ul><li>- [ ] </li></ol> |         | the working directory                                                                             |
-| scope               | <ul><li>- [ ] </li></ol> |         | If you are working in a team scope, you should set this value to your `team ID`.           
-| alias-domains       | <ul><li>- [ ] </li></ol> |         | You can assign a domain to this deployment. Please note that this domain must have been configured in the project. You can use pull request number via `{{PR_NUMBER}}` and branch via `{{BRANCH}}`.         
+| scope               | <ul><li>- [ ] </li></ol> |         | If you are working in a team scope, you should set this value to your `team ID`.
+| alias-domains       | <ul><li>- [ ] </li></ol> |         | You can assign a domain to this deployment. Please note that this domain must have been configured in the project. You can use pull request number via `{{PR_NUMBER}}` and branch via `{{BRANCH}}`.
 | vercel-project-name | <ul><li>- [ ] </li></ol> |         | The name of the project; if absent we'll use the `vercel inspect` command to determine. [#27](https://github.com/amondnet/vercel-action/issues/27) & [#28](https://github.com/amondnet/vercel-action/issues/28)
 | vercel-version      | <ul><li>- [x] </li></ol> |         | vercel-cli package version if absent we will use one declared in [package.json](https://github.com/amondnet/vercel-action/blob/master/package.json)
 ## Outputs
@@ -71,7 +71,7 @@ The name of deployment name.
 > The Vercel for GitHub integration automatically deploys your GitHub projects with Vercel, providing Preview Deployment URLs, and automatic Custom Domain updates.
 [link](https://vercel.com/docs/v2/git-integrations)
 
-We would like to to use `github actions` for build and deploy instead of `Vercel`. 
+We would like to to use `github actions` for build and deploy instead of `Vercel`.
 
 Set `github.enabled: false` in `vercel.json`, see example `vercel.json` file below:
 
@@ -157,24 +157,24 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       #  your build commands
       # - run: |
       #    ng build --prod
       - uses: amondnet/vercel-action@v20 #deploy
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
-          github-token: ${{ secrets.GITHUB_TOKEN }} #Optional 
+          github-token: ${{ secrets.GITHUB_TOKEN }} #Optional
           vercel-args: '--prod' #Optional
           vercel-org-id: ${{ secrets.ORG_ID}}  #Required
-          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required 
+          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
           working-directory: ./sub-directory
 ```
 
 
 ### Angular Example
 
-See [.github/workflows/example-angular.yml](/.github/workflows/example-angular.yml) , 
+See [.github/workflows/example-angular.yml](/.github/workflows/example-angular.yml) ,
 
 
 ### Basic Auth Example
@@ -195,7 +195,7 @@ If you want to assign domain to branch or pr, you should add [Wildcard Domain](h
 
 You can use pull request number via `{{PR_NUMBER}}` and branch via `{{BRANCH}}`
 
-#### Example 
+#### Example
 
 Wildcard Domains : *.angular.vercel-action.amond.dev
 
@@ -216,7 +216,7 @@ https://{{BRANCH}}.angular.vercel-action.amond.dev
 
 
 
-See [.github/workflows/example-angular.yml](/.github/workflows/example-angular.yml) 
+See [.github/workflows/example-angular.yml](/.github/workflows/example-angular.yml)
 
 ```yaml
 name: deploy website
@@ -225,14 +225,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: amondnet/vercel-action@v19
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
-          github-token: ${{ secrets.GITHUB_TOKEN }} #Optional 
+          github-token: ${{ secrets.GITHUB_TOKEN }} #Optional
           vercel-args: '--prod' #Optional
           vercel-org-id: ${{ secrets.ORG_ID}}  #Required
-          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required 
+          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
           working-directory: ./sub-directory #Your Working Directory, Optional
           alias-domains: | #Optional
             staging.angular.vercel-action.amond.dev
