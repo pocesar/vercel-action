@@ -91,7 +91,7 @@ const aliasDomains = core
 
 let octokit;
 if (githubToken) {
-  octokit = new github.GitHub(githubToken);
+  octokit = github.getOctokit(githubToken);
 }
 
 async function setEnv() {
@@ -266,7 +266,7 @@ function buildCommentBody(deploymentCommit, deploymentUrl, deploymentName) {
 
   const rawGithubComment =
     prefix +
-    (typeof githubComment === 'string' || githubComment instanceof String
+    (typeof githubComment === 'string'
       ? githubComment
       : stripIndents`
       ✅ Preview

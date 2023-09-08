@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": true
+  },
+  "files": [
+    "index.js"
+  ]
+}
