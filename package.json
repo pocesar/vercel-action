@@ -2,7 +2,6 @@
   "name": "vercel-action",
   "private": true,
   "license": "MIT",
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/amondnet/vercel-action"
