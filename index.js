@@ -90,6 +90,7 @@ const aliasDomains = core
     return url;
   });
 
+/** @type {ReturnType<typeof github.getOctokit>} */
 let octokit;
 if (githubToken) {
   octokit = github.getOctokit(githubToken);
@@ -218,22 +219,26 @@ async function vercelInspect(deploymentUrl) {
 
 async function findCommentsForEvent() {
   core.debug('find comments for event');
+  /** @type {Awaited<ReturnType<typeof octokit.rest.repos.listCommentsForCommit>>['data']} */
+  let comments = [];
   if (context.eventName === 'push') {
     core.debug('event is "commit", use "listCommentsForCommit"');
-    return octokit.repos.listCommentsForCommit({
+    const { data } = await octokit.rest.repos.listCommentsForCommit({
       ...context.repo,
       commit_sha: context.sha,
     });
-  }
-  if (isPullRequestType(context.eventName)) {
+    comments = data;
+  } else if (isPullRequestType(context.eventName)) {
     core.debug(`event is "${context.eventName}", use "listComments"`);
-    return octokit.issues.listComments({
+    const { data } = await octokit.rest.issues.listComments({
       ...context.repo,
       issue_number: context.issue.number,
     });
+    comments = data;
+  } else {
+    core.error('not supported event_type');
   }
-  core.error('not supported event_type');
-  return [];
+  return comments;
 }
 
 async function findPreviousComment(text) {
@@ -241,7 +246,7 @@ async function findPreviousComment(text) {
     return null;
   }
   core.info('find comment');
-  const { data: comments } = await findCommentsForEvent();
+  const comments = await findCommentsForEvent();
 
   const vercelPreviewURLComment = comments.find((comment) =>
     comment.body.startsWith(text),
@@ -312,13 +317,13 @@ async function createCommentOnCommit(
   );
 
   if (commentId) {
-    await octokit.repos.updateCommitComment({
+    await octokit.rest.repos.updateCommitComment({
       ...context.repo,
       comment_id: commentId,
       body: commentBody,
     });
   } else {
-    await octokit.repos.createCommitComment({
+    await octokit.rest.repos.createCommitComment({
       ...context.repo,
       commit_sha: context.sha,
       body: commentBody,
@@ -345,13 +350,13 @@ async function createCommentOnPullRequest(
   );
 
   if (commentId) {
-    await octokit.issues.updateComment({
+    await octokit.rest.issues.updateComment({
       ...context.repo,
       comment_id: commentId,
       body: commentBody,
     });
   } else {
-    await octokit.issues.createComment({
+    await octokit.rest.issues.createComment({
       ...context.repo,
       issue_number: context.issue.number,
       body: commentBody,
@@ -406,7 +411,7 @@ async function run() {
     core.debug(`The head sha is: ${pr.head.sha}`);
 
     if (octokit) {
-      const { data: commitData } = await octokit.git.getCommit({
+      const { data: commitData } = await octokit.rest.git.getCommit({
         ...context.repo,
         commit_sha: sha,
       });
