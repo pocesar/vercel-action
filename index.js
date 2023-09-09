@@ -146,7 +146,7 @@ async function vercelDeploy(ref, commit) {
 
   const providedArgs = vercelArgs.split(/ +/);
 
-  const argsBase = [...providedArgs, ...['-t', vercelToken]];
+  const argsBase = [...providedArgs, '--yes', ...['-t', vercelToken]];
 
   const args = [
     ...argsBase,
@@ -176,7 +176,7 @@ async function vercelDeploy(ref, commit) {
   }
 
   if (vercelPrebuild) {
-    await exec.exec('npx', [vercelBin, 'build', '--yes', ...argsBase], {
+    await exec.exec('npx', [vercelBin, 'build', ...argsBase], {
       env: {
         ...process.env,
       },
