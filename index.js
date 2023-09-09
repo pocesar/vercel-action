@@ -66,6 +66,7 @@ function getVercelBin() {
 
 const vercelToken = core.getInput('vercel-token', { required: true });
 const vercelArgs = core.getInput('vercel-args');
+const vercelPrebuild = core.getBooleanInput('prebuild');
 const vercelOrgId = core.getInput('vercel-org-id');
 const vercelProjectId = core.getInput('vercel-project-id');
 const vercelScope = core.getInput('scope');
@@ -143,9 +144,10 @@ async function vercelDeploy(ref, commit) {
 
   const providedArgs = vercelArgs.split(/ +/);
 
+  const argsBase = [...providedArgs, ...['-t', vercelToken]];
+
   const args = [
-    ...vercelArgs.split(/ +/),
-    ...['-t', vercelToken],
+    ...argsBase,
     ...addVercelMetadata('githubCommitSha', context.sha, providedArgs),
     ...addVercelMetadata('githubCommitAuthorName', context.actor, providedArgs),
     ...addVercelMetadata(
@@ -169,6 +171,12 @@ async function vercelDeploy(ref, commit) {
   if (vercelScope) {
     core.info('using scope');
     args.push('--scope', vercelScope);
+  }
+
+  if (vercelPrebuild) {
+    await exec.exec('npx', [vercelBin, 'build', '--yes', ...argsBase], options);
+    core.info('prebuilt');
+    args.push('--prebuilt');
   }
 
   await exec.exec('npx', [vercelBin, ...args], options);

@@ -8,6 +8,10 @@ inputs:
     description: ''
     required: false
     default: ''
+  prebuild:
+    required: false
+    default: 'true'
+    description: 'if you want to prebuild, set true, default: true'
   github-comment:
     required: false
     default: 'true'
@@ -65,7 +69,7 @@ outputs:
   preview-name:
     description: 'deployment preview name'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
 
 branding:
