@@ -127,16 +127,17 @@ async function vercelDeploy(ref, commit) {
   let myOutput = '';
   // eslint-disable-next-line no-unused-vars
   let myError = '';
-  const options = {};
-  options.listeners = {
-    stdout: (data) => {
-      myOutput += data.toString();
-      core.info(data.toString());
-    },
-    stderr: (data) => {
-      // eslint-disable-next-line no-unused-vars
-      myError += data.toString();
-      core.info(data.toString());
+  const options = {
+    listeners: {
+      stdout: (data) => {
+        myOutput += data.toString();
+        core.info(data.toString());
+      },
+      stderr: (data) => {
+        // eslint-disable-next-line no-unused-vars
+        myError += data.toString();
+        core.info(data.toString());
+      },
     },
   };
   if (workingDirectory) {
@@ -175,7 +176,11 @@ async function vercelDeploy(ref, commit) {
   }
 
   if (vercelPrebuild) {
-    await exec.exec('npx', [vercelBin, 'build', '--yes', ...argsBase], options);
+    await exec.exec('npx', [vercelBin, 'build', '--yes', ...argsBase], {
+      env: {
+        ...process.env,
+      },
+    });
     core.info('prebuilt');
     args.push('--prebuilt');
   }
