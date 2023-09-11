@@ -12,6 +12,10 @@ inputs:
     required: false
     default: 'true'
     description: 'if you want to prebuild, set true, default: true'
+  archive:
+    required: false
+    default: 'true'
+    description: 'if you want to tar the project, set true, default: true'
   github-comment:
     required: false
     default: 'true'

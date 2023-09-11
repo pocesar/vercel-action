@@ -67,6 +67,7 @@ function getVercelBin() {
 const vercelToken = core.getInput('vercel-token', { required: true });
 const vercelArgs = core.getInput('vercel-args');
 const vercelPrebuild = core.getBooleanInput('prebuild');
+const vercelArchive = core.getBooleanInput('archive');
 const vercelOrgId = core.getInput('vercel-org-id');
 const vercelProjectId = core.getInput('vercel-project-id');
 const vercelScope = core.getInput('scope');
@@ -183,6 +184,11 @@ async function vercelDeploy(ref, commit) {
     });
     core.info('prebuilt');
     args.push('--prebuilt');
+
+    if (vercelArchive) {
+      core.info('archive');
+      args.push('--archive=tgz');
+    }
   }
 
   await exec.exec('npx', [vercelBin, ...args], options);
