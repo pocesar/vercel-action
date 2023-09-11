@@ -147,9 +147,10 @@ async function vercelDeploy(ref, commit) {
 
   const providedArgs = vercelArgs.split(/ +/);
 
-  const argsBase = [...providedArgs, '--yes', ...['-t', vercelToken]];
+  const argsBase = ['--yes', ...['-t', vercelToken]];
 
   const args = [
+    ...providedArgs,
     ...argsBase,
     ...addVercelMetadata('githubCommitSha', context.sha, providedArgs),
     ...addVercelMetadata('githubCommitAuthorName', context.actor, providedArgs),
