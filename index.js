@@ -132,12 +132,12 @@ async function vercelDeploy(ref, commit) {
     listeners: {
       stdout: (data) => {
         myOutput += data.toString();
-        core.info(data.toString());
+        core.debug(data.toString());
       },
       stderr: (data) => {
         // eslint-disable-next-line no-unused-vars
         myError += data.toString();
-        core.info(data.toString());
+        core.debug(data.toString());
       },
     },
   };
