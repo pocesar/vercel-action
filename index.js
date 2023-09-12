@@ -182,6 +182,7 @@ async function vercelDeploy(ref, commit) {
       env: {
         ...process.env,
       },
+      ...(workingDirectory ? { cwd: workingDirectory } : null),
     });
     core.info('prebuilt');
     args.push('--prebuilt');
@@ -206,11 +207,11 @@ async function vercelInspect(deploymentUrl) {
     stdout: (data) => {
       // eslint-disable-next-line no-unused-vars
       myOutput += data.toString();
-      core.info(data.toString());
+      core.debug(data.toString());
     },
     stderr: (data) => {
       myError += data.toString();
-      core.info(data.toString());
+      core.debug(data.toString());
     },
   };
   if (workingDirectory) {
