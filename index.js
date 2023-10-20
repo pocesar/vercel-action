@@ -395,12 +395,24 @@ async function aliasDomainsToDeployment(deploymentUrl) {
     core.info('using scope');
     args.push('--scope', vercelScope);
   }
+
   const promises = aliasDomains.map((domain) =>
-    retry(
-      () =>
-        exec.exec('npx', [vercelBin, ...args, 'alias', deploymentUrl, domain]),
-      2,
-    ),
+    retry(async () => {
+      await exec.exec('npx', [
+        vercelBin,
+        ...args,
+        'inspect',
+        '--wait',
+        deploymentUrl,
+      ]);
+      await exec.exec('npx', [
+        vercelBin,
+        ...args,
+        'alias',
+        deploymentUrl,
+        domain,
+      ]);
+    }, 2),
   );
 
   await Promise.all(promises);
