@@ -400,10 +400,10 @@ async function aliasDomainsToDeployment(deploymentUrl) {
     retry(async () => {
       await exec.exec('npx', [
         vercelBin,
-        ...args,
         'inspect',
-        '--wait',
         deploymentUrl,
+        ...args,
+        '--wait',
       ]);
       await exec.exec('npx', [
         vercelBin,
