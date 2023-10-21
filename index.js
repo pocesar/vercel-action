@@ -398,13 +398,7 @@ async function aliasDomainsToDeployment(deploymentUrl) {
 
   const promises = aliasDomains.map((domain) =>
     retry(async () => {
-      await exec.exec('npx', [
-        vercelBin,
-        'inspect',
-        deploymentUrl,
-        ...args,
-        '--wait',
-      ]);
+      await vercelInspect(deploymentUrl);
       await exec.exec('npx', [
         vercelBin,
         ...args,
