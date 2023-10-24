@@ -20,6 +20,22 @@ const workingDirectory = core.getInput('working-directory');
 const prNumberRegExp = /{{\s*PR_NUMBER\s*}}/g;
 const branchRegExp = /{{\s*BRANCH\s*}}/g;
 
+/**
+ *
+ * @param {Partial<exec.ExecOptions>} [options]
+ * @returns {Partial<exec.ExecOptions>}
+ */
+function withDefaultOptions(options = {}) {
+  const { env, ...rest } = options;
+
+  return {
+    env: {
+      ...env,
+    },
+    ...rest,
+  };
+}
+
 function isPullRequestType(event) {
   return event.startsWith('pull_request');
 }
@@ -128,7 +144,7 @@ async function vercelDeploy(ref, commit) {
   let myOutput = '';
   // eslint-disable-next-line no-unused-vars
   let myError = '';
-  const options = {
+  const options = withDefaultOptions({
     listeners: {
       stdout: (data) => {
         myOutput += data.toString();
@@ -140,7 +156,7 @@ async function vercelDeploy(ref, commit) {
         core.debug(data.toString());
       },
     },
-  };
+  });
   if (workingDirectory) {
     options.cwd = workingDirectory;
   }
@@ -186,12 +202,9 @@ async function vercelDeploy(ref, commit) {
         ...argsBase,
         ...(providedArgs.includes('--prod') ? ['--prod'] : []),
       ],
-      {
-        env: {
-          ...process.env,
-        },
+      withDefaultOptions({
         ...(workingDirectory ? { cwd: workingDirectory } : null),
-      },
+      }),
     );
     core.info('prebuilt');
     args.push('--prebuilt');
@@ -211,7 +224,7 @@ async function vercelInspect(deploymentUrl) {
   // eslint-disable-next-line no-unused-vars
   let myOutput = '';
   let myError = '';
-  const options = {};
+  const options = withDefaultOptions();
   options.listeners = {
     stdout: (data) => {
       // eslint-disable-next-line no-unused-vars
@@ -399,13 +412,11 @@ async function aliasDomainsToDeployment(deploymentUrl) {
   const promises = aliasDomains.map((domain) =>
     retry(async () => {
       await vercelInspect(deploymentUrl);
-      await exec.exec('npx', [
-        vercelBin,
-        ...args,
-        'alias',
-        deploymentUrl,
-        domain,
-      ]);
+      await exec.exec(
+        'npx',
+        [vercelBin, ...args, 'alias', deploymentUrl, domain],
+        withDefaultOptions(),
+      );
     }, 2),
   );
 
