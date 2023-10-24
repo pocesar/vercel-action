@@ -30,6 +30,7 @@ function withDefaultOptions(options = {}) {
 
   return {
     env: {
+      ...process.env,
       ...env,
     },
     ...rest,
