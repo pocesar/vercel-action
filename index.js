@@ -164,7 +164,7 @@ async function vercelDeploy(ref, commit) {
 
   const providedArgs = vercelArgs.split(/ +/);
 
-  const argsBase = ['--yes', ...['-t', vercelToken]];
+  const argsBase = ['--yes', '-t', vercelToken];
 
   const args = [
     ...providedArgs,
@@ -216,7 +216,7 @@ async function vercelDeploy(ref, commit) {
     }
   }
 
-  await exec.exec('npx', [vercelBin, ...args], options);
+  await exec.exec('npx', [vercelBin, 'deploy', ...args], options);
 
   return myOutput;
 }
@@ -241,7 +241,14 @@ async function vercelInspect(deploymentUrl) {
     options.cwd = workingDirectory;
   }
 
-  const args = [vercelBin, 'inspect', deploymentUrl, '-t', vercelToken];
+  const args = [
+    vercelBin,
+    'inspect',
+    deploymentUrl,
+    '-t',
+    vercelToken,
+    '--wait',
+  ];
 
   if (vercelScope) {
     core.info('using scope');
@@ -326,10 +333,10 @@ function buildCommentBody(deploymentCommit, deploymentUrl, deploymentName) {
     `);
 
   return rawGithubComment
-    .replace(/\{\{deploymentCommit\}\}/g, deploymentCommit)
-    .replace(/\{\{deploymentName\}\}/g, deploymentName)
-    .replace(
-      /\{\{deploymentUrl\}\}/g,
+    .replaceAll('{{deploymentCommit}}', deploymentCommit)
+    .replaceAll('{{deploymentName}}', deploymentName)
+    .replaceAll(
+      '{{deploymentUrl}}',
       joinDeploymentUrls(deploymentUrl, aliasDomains),
     );
 }
@@ -415,7 +422,7 @@ async function aliasDomainsToDeployment(deploymentUrl) {
       await vercelInspect(deploymentUrl);
       await exec.exec(
         'npx',
-        [vercelBin, ...args, 'alias', deploymentUrl, domain],
+        [vercelBin, 'alias', deploymentUrl, domain, ...args],
         withDefaultOptions(),
       );
     }, 2),
