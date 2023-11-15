@@ -404,7 +404,7 @@ async function aliasDomainsToDeployment(deploymentUrl) {
   if (!deploymentUrl) {
     core.error('deployment url is null');
   }
-  const args = ['-t', vercelToken];
+  const args = ['--yes', '-t', vercelToken];
   if (vercelScope) {
     core.info('using scope');
     args.push('--scope', vercelScope);
