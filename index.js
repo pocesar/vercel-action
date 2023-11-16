@@ -221,6 +221,7 @@ async function vercelDeploy(ref, commit) {
         'build',
         ...argsBase,
         ...(providedArgs.includes('--prod') ? ['--prod'] : []),
+        ...(vercelScope ? ['--scope', vercelScope] : []),
       ],
       withDefaultOptions({
         ...(workingDirectory ? { cwd: workingDirectory } : null),
