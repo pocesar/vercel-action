@@ -209,7 +209,7 @@ async function vercelDeploy(ref, commit) {
   ];
 
   if (vercelScope) {
-    core.info('using scope');
+    core.info('deploy using scope');
     args.push('--scope', vercelScope);
   }
 
@@ -270,7 +270,7 @@ async function vercelInspect(deploymentUrl) {
   ];
 
   if (vercelScope) {
-    core.info('using scope');
+    core.info('inspect is using scope');
     args.push('--scope', vercelScope);
   }
   await exec.exec('npx', args, options);
@@ -432,7 +432,7 @@ async function aliasDomainsToDeployment(deploymentUrl) {
   }
   const args = ['--yes', '-t', vercelToken];
   if (vercelScope) {
-    core.info('using scope');
+    core.info('alias is using scope');
     args.push('--scope', vercelScope);
   }
 
