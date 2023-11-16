@@ -119,10 +119,29 @@ async function setEnv() {
   if (vercelOrgId) {
     core.info('set env variable : VERCEL_ORG_ID');
     core.exportVariable('VERCEL_ORG_ID', vercelOrgId);
-  }
-  if (vercelProjectId) {
-    core.info('set env variable : VERCEL_PROJECT_ID');
-    core.exportVariable('VERCEL_PROJECT_ID', vercelProjectId);
+    if (vercelProjectId) {
+      core.info('set env variable : VERCEL_PROJECT_ID');
+      core.exportVariable('VERCEL_PROJECT_ID', vercelProjectId);
+    }
+  } else if (vercelProjectId && vercelScope) {
+    core.info('Using vercel project id with vercel scope');
+    await exec.exec(
+      'npx',
+      [
+        vercelBin,
+        'link',
+        '-t',
+        vercelToken,
+        '--project',
+        vercelProjectId,
+        '--scope',
+        vercelScope,
+        '--yes',
+      ],
+      withDefaultOptions({
+        ...(workingDirectory ? { cwd: workingDirectory } : null),
+      }),
+    );
   }
 }
 
