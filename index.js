@@ -33,6 +33,7 @@ function withDefaultOptions(options = {}) {
       ...process.env,
       ...env,
     },
+    ...(workingDirectory ? { cwd: workingDirectory } : null),
     ...rest,
   };
 }
@@ -138,9 +139,7 @@ async function setEnv() {
         vercelScope,
         '--yes',
       ],
-      withDefaultOptions({
-        ...(workingDirectory ? { cwd: workingDirectory } : null),
-      }),
+      withDefaultOptions(),
     );
   }
 }
@@ -177,9 +176,6 @@ async function vercelDeploy(ref, commit) {
       },
     },
   });
-  if (workingDirectory) {
-    options.cwd = workingDirectory;
-  }
 
   const providedArgs = vercelArgs.split(/ +/);
 
@@ -223,9 +219,7 @@ async function vercelDeploy(ref, commit) {
         ...(providedArgs.includes('--prod') ? ['--prod'] : []),
         ...(vercelScope ? ['--scope', vercelScope] : []),
       ],
-      withDefaultOptions({
-        ...(workingDirectory ? { cwd: workingDirectory } : null),
-      }),
+      withDefaultOptions(),
     );
     core.info('prebuilt');
     args.push('--prebuilt');
@@ -245,21 +239,19 @@ async function vercelInspect(deploymentUrl) {
   // eslint-disable-next-line no-unused-vars
   let myOutput = '';
   let myError = '';
-  const options = withDefaultOptions();
-  options.listeners = {
-    stdout: (data) => {
-      // eslint-disable-next-line no-unused-vars
-      myOutput += data.toString();
-      core.debug(data.toString());
+  const options = withDefaultOptions({
+    listeners: {
+      stdout: (data) => {
+        // eslint-disable-next-line no-unused-vars
+        myOutput += data.toString();
+        core.debug(data.toString());
+      },
+      stderr: (data) => {
+        myError += data.toString();
+        core.debug(data.toString());
+      },
     },
-    stderr: (data) => {
-      myError += data.toString();
-      core.debug(data.toString());
-    },
-  };
-  if (workingDirectory) {
-    options.cwd = workingDirectory;
-  }
+  });
 
   const args = [
     vercelBin,
